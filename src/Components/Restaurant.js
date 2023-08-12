@@ -17,14 +17,18 @@ function Restaurant() {
     getRestaurants();
   }, []);
 
+  //"https://www.swiggy.com/dapi/restaurants/list/v5?lat=24.8019551&lng=85.003062&page_type=DESKTOP_WEB_LISTING"
   async function getRestaurants() {
     const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=24.8019551&lng=85.003062&page_type=DESKTOP_WEB_LISTING"
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=24.8019551&lng=85.003062&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      
     );
-
+   
     const json = await data.json();
-    setAllRestaurants(json?.data?.cards[2]?.data?.data?.cards);
-    setFilteredRestaurants(json?.data?.cards[2]?.data?.data?.cards);
+    
+
+    setAllRestaurants(json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    setFilteredRestaurants(json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
   }
 
   const searchData = (searchText, restaurants) => {
@@ -80,10 +84,10 @@ function Restaurant() {
           {filteredRestaurants.map((restaurant) => {
             return (
               <Link
-                to={"/restaurant/" + restaurant.data.id}
-                key={restaurant.data.id}
+                to={"/restaurant/" + restaurant.info.id}
+                key={restaurant.info.id}
               >
-                <RestaurantCard {...restaurant.data} />
+                <RestaurantCard {...restaurant.info} />
               </Link>
             );
           })}
